@@ -14,11 +14,13 @@ module GoogleMaps
         def build_places_url(query: query, location: location, radius: radius, type: type)
             fetch_url = PLACES_URL + query.strip.gsub!(/\s+/, '+')
 
-            ## Not necessary to sanitize this input like the quesry abaove since these will be forced selections by the user
+            
             if location
-                fetch_url = "&location=#{location}"
+                ## Must convert to geocoded location
+                fetch_url += "&location=#{location}"
             end
 
+            ## Not necessary to sanitize this input like the query abaove since these will be forced selections by the user
             if radius
                 fetch_url += "&radius=#{radius}"
             end
