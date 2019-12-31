@@ -1,11 +1,42 @@
 class UsersController < ApplicationController
 
     def create
-        byebug()
-        User.create(user_params)
-        
+        user = User.new(user_params)
+        if user.save
+            render json: {
+                message: "Creation Successful",
+                user: {
+                    email: user.email, id: user.id
+                }
+            }
+        else
+            render json: {
+                message: "Failed Fetch",
+            }
+        end
     end
 
+    def login
+        user = User.find_by(id: user_params)
+        if user
+            render json: {
+                message: "Login Successful",
+                user: {
+                    email: user.email, id: user.id
+                }
+            }
+        else
+            render json: {
+                message: "Failed Fetch",
+            }
+        end
+    end
+
+    def show
+        byebug()
+        user = User.find(params[:id])
+        render json: UserSerializer.new(user)
+    end
 
     private
 
