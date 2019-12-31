@@ -3,6 +3,8 @@ module GoogleMaps
         KEY = 'AIzaSyBCHWjw3rHXuSkQDOz2wF7u6nbx9BI3zqk'
         PLACES_URL = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query='
 
+        GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json?address='
+
         ## Requires a photo ref tag from the place api response
         PHOTO_URL = 'https://maps.googleapis.com/maps/api/place/photo?photoreference='
         ## Requires a place id tag from the place api response
@@ -11,19 +13,33 @@ module GoogleMaps
         def initialize() 
         end
 
-        def build_places_url(query: query, location: location, radius: radius, type: type)
-            fetch_url = PLACES_URL + query.strip.gsub!(/\s+/, '+')
+        def sanitize_input(string)
+            string.strip.gsub!(/\s+/, '+')
+        end
 
+        def get_geocode(location)
+            response = RestClient.get("#{GEOCODE_URL}#{sanitize_input(location)}&key=#{KEY}")
+            json = JSON.parse(response)["results"][0]["geometry"]["location"]
+            "#{json['lat']},#{json['lng']}"
+        end
+
+        def build_places_url(query: query, location: location, radius: radius, type: type)
+
+            fetch_url = PLACES_URL + sanitize_input(query)
+
+            sanitized_location = sanitize_input(location)
             
-            if location
+            if sanitized_location.length != 0
                 ## Must convert to geocoded location
-                fetch_url += "&location=#{location}"
+                geocode = get_geocode(sanitize_location)
+                if radius.length != 0
+                    
+                end
+
+                fetch_url += "&locationbias=circle:#{geocode}"
             end
 
             ## Not necessary to sanitize this input like the query abaove since these will be forced selections by the user
-            if radius
-                fetch_url += "&radius=#{radius}"
-            end
 
             if type
                 fetch_url += "&type=#{type}"
