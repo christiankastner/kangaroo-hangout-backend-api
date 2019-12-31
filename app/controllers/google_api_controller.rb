@@ -1,11 +1,9 @@
 class GoogleApiController < ApplicationController
-
     def create
         response = GoogleMaps::PlacesAdapter.new()
         
         render json: response.fetch_places(google_api_params)
     end
-
 
     private
 
