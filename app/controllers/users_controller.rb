@@ -17,7 +17,7 @@ class UsersController < ApplicationController
     end
 
     def login
-        user = User.find_by(id: user_params)
+        user = User.find_by(user_params)
         if user
             render json: {
                 message: "Login Successful",
