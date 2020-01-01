@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 2019_12_24_004451) do
   create_table "activities", force: :cascade do |t|
     t.string "name"
     t.string "photo"
-    t.string "location"
-    t.string "type"
+    t.string "formatted_address"
+    t.string "types"
     t.string "icon"
     t.integer "event_id"
     t.datetime "created_at", precision: 6, null: false
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 2019_12_24_004451) do
 
   create_table "events", force: :cascade do |t|
     t.integer "user_id"
-    t.datetime "date"
+    t.date "date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

@@ -1,5 +1,5 @@
 class EventSerializer
   include FastJsonapi::ObjectSerializer
-  attributes :date
+  attributes :date, :activities
   has_many :activities
 end
