@@ -28,7 +28,8 @@ ActiveRecord::Schema.define(version: 2019_12_24_004451) do
 
   create_table "attendees", force: :cascade do |t|
     t.integer "event_id"
-    t.integer "attendee_id"
+    t.integer "user_id"
+    t.boolean "confirmed"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
