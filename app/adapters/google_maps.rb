@@ -55,6 +55,10 @@ module GoogleMaps
             response = RestClient.get(url)
             
             json = JSON.parse(response)
+            json["results"] = json["results"].each do |result|
+                result["formatted_address"] = result["vicinity"]
+            end
+            return json
         end
     end
 end
