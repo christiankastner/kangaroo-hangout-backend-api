@@ -3,7 +3,7 @@ module GoogleMaps
         KEY = 'AIzaSyBCHWjw3rHXuSkQDOz2wF7u6nbx9BI3zqk'
         PLACES_URL = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query='
 
-        NEARBY_URL = 
+        NEARBY_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="
 
         GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json?address='
 
@@ -28,20 +28,21 @@ module GoogleMaps
 
         def build_places_url(query: query, location: location, radius: radius, type: type)
 
-            fetch_url = PLACES_URL + sanitize_input(query)
-
             sanitized_location = sanitize_input(location)
             
-            if sanitized_location 
-                ## Must convert to geocoded location
-                geocode = get_geocode(sanitized_location)
+            ## Must convert to geocoded location
+            geocode = get_geocode(sanitized_location)
 
-                fetch_url += "&locationbias=circle:#{radius}#{geocode}"
-            end
+            fetch_url = NEARBY_URL + "#{geocode}&radius=#{radius}"
 
             ## Not necessary to sanitize this input like the query abaove since these will be forced selections by the user
+            if query.length > 0
+                input = sanitize_input(query)
 
-            if type
+                fetch_url += "keyword=#{input}"
+            end
+
+            if type.length > 0
                 fetch_url += "&type=#{type}"
             end
 
@@ -52,8 +53,8 @@ module GoogleMaps
             url = build_places_url(query: query, location: location, radius: radius, type: type)
             
             response = RestClient.get(url)
-
-            return JSON.parse(response)
+            
+            json = JSON.parse(response)
         end
     end
 end
