@@ -1,5 +1,4 @@
-class ActivitySerializer
-  include FastJsonapi::ObjectSerializer
-  attributes :name, :photo, :location, :type, :icon, :event
+class ActivitySerializer < ActiveModel::Serializer
+  attributes :id, :name, :formatted_address
   belongs_to :event
 end

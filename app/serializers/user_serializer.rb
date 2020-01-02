@@ -1,5 +1,5 @@
-class UserSerializer
-  include FastJsonapi::ObjectSerializer
-  attributes :name, :email, :events, :activities
-  has_many :events
+class UserSerializer < ActiveModel::Serializer
+  attributes :id, :name, :email, :events, :attendees
+  has_many :events, include_nested_associations: true
+  has_many :attendees, include_nested_associations: true
 end

@@ -1,6 +1,4 @@
-class AttendeeSerializer
-  include FastJsonapi::ObjectSerializer
-  attributes 
-  belongs_to :user
+class AttendeeSerializer < ActiveModel::Serializer
+  attributes :id, :event
   belongs_to :event
 end
