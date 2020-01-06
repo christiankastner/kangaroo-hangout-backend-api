@@ -3,8 +3,4 @@ class EventSerializer < ActiveModel::Serializer
   has_many :activities
   has_many :attendees
   belongs_to :user
-
-  def model_name
-
-  end
 end

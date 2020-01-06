@@ -8,7 +8,6 @@ class EventsController < ApplicationController
     def destroy
         event = Event.find(params[:id])
         event.destroy
-
         render json: {message: "Event Destroyed"}
     end
     private
