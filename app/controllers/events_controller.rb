@@ -1,4 +1,5 @@
 class EventsController < ApplicationController
+    skip_before_action :authorized, only: [:create, :destroy]
 
     def create
         event = Event.create(event_params)
