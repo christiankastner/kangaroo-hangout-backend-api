@@ -36,13 +36,13 @@ module GoogleMaps
             fetch_url = NEARBY_URL + "#{geocode}&radius=#{radius}"
 
             ## Not necessary to sanitize this input like the query abaove since these will be forced selections by the user
-            if query.length > 0
+            if query and query.length > 0
                 input = sanitize_input(query)
 
-                fetch_url += "keyword=#{input}"
+                fetch_url += "&keyword=#{input}"
             end
 
-            if type.length > 0
+            if type and type.length > 0
                 fetch_url += "&type=#{type}"
             end
 
