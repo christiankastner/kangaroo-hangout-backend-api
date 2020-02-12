@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-    skip_before_action :authorized, only: [:create, :update, :show, :destroy]
+    skip_before_action :authorized, only: [:create]
 
     def create
         user = User.new(user_params)
@@ -8,7 +8,7 @@ class UsersController < ApplicationController
             render json: {
                 status: :created,
                 user: {
-                    email: user.email, jwt: token
+                    jwt: token
                 }
             }
         else
@@ -17,22 +17,6 @@ class UsersController < ApplicationController
             }
         end
     end
-
-    # def login
-    #     user = User.find_by(user_params)
-    #     if user
-    #         render json: {
-    #             message: "Login Successful",
-    #             user: {
-    #                 email: user.email, id: user.id
-    #             }
-    #         }
-    #     else
-    #         render json: {
-    #             message: "Failed Fetch",
-    #         }
-    #     end
-    # end
 
     def show
         user = User.find(params[:id])

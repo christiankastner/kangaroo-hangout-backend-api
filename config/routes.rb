@@ -3,7 +3,8 @@ Rails.application.routes.draw do
   resources :activities
   resources :events
   resources :users
-  post "/users/login", to: "auth#login"
+  post "/auth", to: "auth#create"
+  get "/current_user", to: "auth#show"
   get '/profile', to: 'users#profile'
   
   resources :google_api
