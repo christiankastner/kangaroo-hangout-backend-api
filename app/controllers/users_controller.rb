@@ -1,13 +1,14 @@
 class UsersController < ApplicationController
-    skip_before_action :authorized, only: [:create]
+    skip_before_action :authorized, only: [:create, :update, :show, :destroy]
 
     def create
-        user = User.create(user_params)
-        if @user.valid?
+        user = User.new(user_params)
+        if user.save
+            token = encode_token(user_id: user.id)
             render json: {
                 status: :created,
                 user: {
-                    email: user.email, id: user.id
+                    email: user.email, jwt: token
                 }
             }
         else
@@ -16,6 +17,7 @@ class UsersController < ApplicationController
             }
         end
     end
+
     # def login
     #     user = User.find_by(user_params)
     #     if user
@@ -52,6 +54,6 @@ class UsersController < ApplicationController
     private
 
     def user_params
-        params.require(:user).permit(:email, :name)
+        params.require(:user).permit(:email, :name, :password)
     end
 end
