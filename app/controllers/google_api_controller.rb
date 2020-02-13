@@ -1,4 +1,6 @@
 class GoogleApiController < ApplicationController
+    skip_before_action :authorized, only: [:create]
+
     def create
         response = GoogleMaps::PlacesAdapter.new()
         render json: response.fetch_places(google_api_params)
@@ -8,7 +10,7 @@ class GoogleApiController < ApplicationController
 
     def google_api_params
         parameters = params.require(:google_api).permit(:query, :location, :radius, :type)
-
+        
         {
             query: parameters[:query],
             location: parameters[:location],

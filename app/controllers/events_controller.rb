@@ -2,8 +2,12 @@ class EventsController < ApplicationController
     skip_before_action :authorized, only: [:create, :destroy]
 
     def create
-        event = Event.create(event_params)
-        render json: event
+        event = Event.new(event_params)
+        event.user_id = user_id
+        if event.save
+            render json: {status: :created}
+        else
+            render json: {status: :unsuccessful}
     end
     
     def destroy
@@ -14,7 +18,7 @@ class EventsController < ApplicationController
     private
 
     def event_params
-        params.require(:event).permit(:date, :user_id, activities_attributes: [
+        params.require(:event).permit(:date, activities_attributes: [
                                                                                 :name, 
                                                                                 :formatted_address,
                                                                                 :icon,
