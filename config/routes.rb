@@ -2,10 +2,10 @@ Rails.application.routes.draw do
   resources :attendees
   resources :activities
   resources :events
-  resources :users
   post "/auth", to: "auth#create"
   get "/current_user", to: "auth#show"
-  get '/profile', to: 'users#profile'
+  patch "/current_user", to: "auth#edit"
+  delete "/current_user", to: "auth#destroy"
   
   resources :google_api
   post "/google_api", to: "google_api#create"

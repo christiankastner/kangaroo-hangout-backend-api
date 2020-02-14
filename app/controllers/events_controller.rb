@@ -1,20 +1,25 @@
 class EventsController < ApplicationController
-    skip_before_action :authorized, only: [:create, :destroy]
-
+    
     def create
         event = Event.new(event_params)
-        event.user_id = user_id
+        event.user = current_user
         if event.save
             render json: {status: :created}
         else
             render json: {status: :unsuccessful}
+        end
     end
     
     def destroy
         event = Event.find(params[:id])
-        event.destroy
-        render json: {message: "Event Destroyed"}
+        if current_user.id == event.user_id
+            event.destroy
+            render json: {message: "Event Destroyed"}
+        else
+            render json: {status: :unsuccessful}
+        end
     end
+
     private
 
     def event_params

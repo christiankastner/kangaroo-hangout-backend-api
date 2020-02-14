@@ -22,10 +22,29 @@ class AuthController < ApplicationController
       end
     end
 
+    def destroy
+      @user = current_user
+      if logged_in?
+        @user.destroy
+        render json: {status: :deleted}
+      else
+        render json: {error: 'No user could be found'}, status: 401
+      end
+    end
+
+    def edit
+      @user = current_user
+      if logged_in?
+        @user.update(user_login_params)
+        render json: @user
+      else
+        render json: {error: 'No user could be found'}, status: 401
+      end
+    end
+
     private
  
     def user_login_params
-        # params { user: {username: 'Chandler Bing', password: 'hi' } }
         params.require(:user).permit(:email, :password, :name)
     end
 end
