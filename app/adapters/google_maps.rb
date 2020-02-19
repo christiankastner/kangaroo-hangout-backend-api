@@ -1,6 +1,7 @@
 module GoogleMaps
     class PlacesAdapter
-        KEY = 'AIzaSyBCHWjw3rHXuSkQDOz2wF7u6nbx9BI3zqk'
+        KEY = ENV['google_api_key']
+
         PLACES_URL = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query='
 
         NEARBY_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="
@@ -21,19 +22,15 @@ module GoogleMaps
         end
 
         def get_geocode(location)
-            response = RestClient.get("#{GEOCODE_URL}#{location}&key=#{KEY}")
+            sanitized_location = sanitize_input(location)
+            response = RestClient.get("#{GEOCODE_URL}#{sanitized_location}&key=#{KEY}")
             json = JSON.parse(response)["results"][0]["geometry"]["location"]
-            "#{json['lat']},#{json['lng']}"
+            {lat: json['lat'], lng: json['lng']}
         end
 
-        def build_places_url(query: query, location: location, radius: radius, type: type)
+        def build_places_url(query: query, geocode: geocode, radius: radius, type: type)
 
-            sanitized_location = sanitize_input(location)
-            
-            ## Must convert to geocoded location
-            geocode = get_geocode(sanitized_location)
-
-            fetch_url = NEARBY_URL + "#{geocode}&radius=#{radius}"
+            fetch_url = NEARBY_URL + "#{geocode[:lat]},#{geocode[:lng]}&radius=#{radius}"
 
             ## Not necessary to sanitize this input like the query abaove since these will be forced selections by the user
             if query and query.length > 0
@@ -49,8 +46,8 @@ module GoogleMaps
             return fetch_url + "&key=#{KEY}"
         end
 
-        def fetch_places(query: query, location: location, radius: radius, type: type)
-            url = build_places_url(query: query, location: location, radius: radius, type: type)
+        def fetch_places(query: query, geocode: geocode, radius: radius, type: type, location: location)
+            url = build_places_url(query: query, geocode: geocode, radius: radius, type: type)
             
             response = RestClient.get(url)
             
