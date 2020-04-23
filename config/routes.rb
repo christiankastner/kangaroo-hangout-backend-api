@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :attendees
   resources :activities
   resources :events
+  resources :users
   post "/auth", to: "auth#create"
   get "/current_user", to: "auth#show"
   patch "/current_user", to: "auth#edit"
